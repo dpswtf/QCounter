@@ -1,4 +1,4 @@
-package com.example.dpswtf.qcounter;
+package com.qcounter;
 
 import org.junit.Test;
 
