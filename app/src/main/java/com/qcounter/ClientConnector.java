@@ -10,7 +10,6 @@ public class ClientConnector {
 
     public enum ConnectionType { SOCKET, HTTP }
 
-    // Variables for connection
     private String connectionName;
     private ConnectionType type;
     private String serverIP;
@@ -44,5 +43,29 @@ public class ClientConnector {
     // For http request, the request will be http://serverIP:serverPort/?param=id
     public int getQueueNumber(int id, String param){
         return -1;
+    }
+
+    public String getConnectionName() {
+        return connectionName;
+    }
+
+    public ConnectionType getType() {
+        return type;
+    }
+
+    public String getServerIP() {
+        return serverIP;
+    }
+
+    public String getServerPort() {
+        return serverPort;
+    }
+
+    public int[] getServerIds() {
+        return serverIds;
+    }
+
+    public String[] getServerIdsNames() {
+        return serverIdsNames;
     }
 }
