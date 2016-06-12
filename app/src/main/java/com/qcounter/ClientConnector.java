@@ -8,15 +8,26 @@ package com.qcounter;
  */
 public class ClientConnector {
 
+    public enum ConnectionType { SOCKET, HTTP }
+
     // Variables for connection
-    // Maybe change this to arguments on constructor instead.
-    public static final String serverIP = "";
-    public static final String serverPort = "";
+    private String connectionName;
+    private ConnectionType type;
+    private String serverIP;
+    private String serverPort;
+
+    private int[] serverIds; // E.g. {1 , 2}
+    private String[] serverIdsNames; // E.g. {"Linha 1", "Linha 2"}
 
 
     // Sets up connection with target server.
-    public void setUpConnection(){
-        //...
+    public void setUpConnection(String connectionName, String serverIP, String serverPort, int[] serverIds, String[] serverIdsNames, ConnectionType type){
+        this.connectionName = connectionName;
+        this.serverIP = serverIP;
+        this.serverPort = serverPort;
+        this.serverIds = serverIds;
+        this.serverIdsNames = serverIdsNames;
+        this.type = type;
 
         setUpPolling(2000);
     }
@@ -30,8 +41,8 @@ public class ClientConnector {
 
     // Requests the current number from a queue from this server.
     // E.g. Q: "What's the current queue number of line 3 at Continente Mem martins?"; A:"4"
-    // Maybe include an ID, if there's more than one queue in a particular server.
-    public int getQueueNumber(int id){
+    // For http request, the request will be http://serverIP:serverPort/?param=id
+    public int getQueueNumber(int id, String param){
         return -1;
     }
 }
