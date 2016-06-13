@@ -47,12 +47,12 @@ public class ClientConnector {
 
     // Requests the current number from a queue from this server.
     // E.g. Q: "What's the current queue number of line 3 at Continente Mem martins?"; A:"4"
-    // For http request, the request will be http://serverIP:serverPort/param (where param could be ?number=2)
+    // For http request, the request will be http://serverIP:serverPort/param (where param could be ?number=2)+
 
     private class GetQueuesTask extends AsyncTask<Void, Void, Queue[]>{
 
         protected Queue[] doInBackground(Void... params) {
-            Queue[] queues;
+            Queue[] queues = null;
             switch(type){
                 case HTTP:
                     String urlS = serverIP;
@@ -68,13 +68,12 @@ public class ClientConnector {
                     }
                     break;
                 case SOCKET:
-
+                    // TODO
                     break;
                 default:
                     break;
             }
-
-            return null;
+            return queues;
         }
 
         protected void onPostExecute(Queue[] result) {
@@ -88,19 +87,22 @@ public class ClientConnector {
         task.execute();
     }
 
+    // If server connection is HTTP, handle on this method.
+    // Returns queue
     public Queue[] getQueuesFromHTTP(String urlS) throws IOException{
         HttpURLConnection conn = null;
         Queue[] queues = null;
         try{
             URL url = new URL(urlS);
-            System.out.println(urlS);
+
+            // Open connection and receive data
             conn = (HttpURLConnection) url.openConnection();
-
             InputStream in = new BufferedInputStream(conn.getInputStream());
-            String html = IOUtils.toString(in, "UTF-8");
 
+            // Parse data
             switch(urlS){
                 case "http://myticket.iscte-iul.pt/getTickets.jsp": // ISCTE
+                    String html = IOUtils.toString(in, "UTF-8");
                     Document doc = Jsoup.parse(html);
                     int size = doc.select("tbody").select("tr").size();
                     queues = new Queue[size-1];
@@ -115,7 +117,6 @@ public class ClientConnector {
                     break;
                 default: break;
             }
-
         } catch (Exception e){
             e.printStackTrace();
         } finally{
@@ -123,7 +124,6 @@ public class ClientConnector {
                 conn.disconnect();
             }
         }
-
         return queues;
     }
 
