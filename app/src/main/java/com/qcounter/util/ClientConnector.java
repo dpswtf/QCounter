@@ -18,7 +18,7 @@ import com.qcounter.ui.MainScreen;
  * ClientConnector.java
  * Class that handles connections and requests with target server.
  *
- * TODO: Implement class, Remove TODO comments and add JDoc.
+ * TODO: Implement sockets, add JDoc.
  */
 public class ClientConnector extends ContextWrapper {
 
