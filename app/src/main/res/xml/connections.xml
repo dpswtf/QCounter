@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <connection>
+        <name>ISCTE</name>
+        <ip>http://myticket.iscte-iul.pt/</ip>
+        <type>HTTP</type>
+        <param>getTickets.jsp</param>
+        <polling>5000</polling>
+    </connection>
+
+    <connection>
+        <name>FCUL</name>
+        <ip>http://ciencias.ulisboa.pt/servicos/perfil/SenhasAtendimento/</ip>
+        <type>HTTP</type>
+        <param>data</param>
+        <polling>10000</polling>
+    </connection>
+
+</resources>

@@ -1,4 +1,4 @@
-package com.qcounter;
+package com.qcounter.util;
 
 
 public class Queue {
