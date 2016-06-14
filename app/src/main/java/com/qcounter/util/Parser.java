@@ -23,6 +23,10 @@ public class Parser {
         else if(url.equals(links[1])){
             queues = parseFCUL(doc);
         }
+        else { // Default operation - only one queue and <body> has only queue number
+            Queue queue = new Queue("Linha");
+            queue.setCurrentNumberName(doc.select("body").text());
+        }
 
         return queues;
     }

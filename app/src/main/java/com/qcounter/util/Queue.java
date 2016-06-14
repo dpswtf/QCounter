@@ -5,14 +5,14 @@ public class Queue {
     private String queueName;
     private String serviceName;
 
-    // Sometimes we can have either a number or a number name
-    private String numberName;
-    private int currentNumber;
+    // String because, for example, we can have either E01 or just 01.
+    private String currentNumberName;
 
-    public Queue(String queueName, String serviceName, String numberName){
+
+    public Queue(String queueName, String serviceName, String currentNumberName){
         this.queueName = queueName;
         this.serviceName = serviceName;
-        this.numberName = numberName;
+        this.currentNumberName = currentNumberName;
     }
 
     public Queue(String queueName, String serviceName){
@@ -22,14 +22,6 @@ public class Queue {
 
     public Queue(String queueName){
         this.queueName = queueName;
-    }
-
-    public int getCurrentNumber() {
-        return currentNumber;
-    }
-
-    public void setCurrentNumber(int currentNumber) {
-        this.currentNumber = currentNumber;
     }
 
     public String getServiceName() {
@@ -48,12 +40,12 @@ public class Queue {
         this.queueName = queueName;
     }
 
-    public String getNumberName() {
-        return numberName;
+    public String getCurrentNumberName() {
+        return currentNumberName;
     }
 
-    public void setNumberName(String numberName) {
-        this.numberName = numberName;
+    public void setCurrentNumberName(String numberName) {
+        this.currentNumberName = numberName;
     }
 
 
