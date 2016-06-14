@@ -1,5 +1,7 @@
 package com.qcounter.util;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.os.AsyncTask;
 import android.os.Handler;
 
@@ -10,13 +12,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import org.apache.commons.io.IOUtils;
 
+import com.qcounter.ui.MainScreen;
+
 /**
  * ClientConnector.java
  * Class that handles connections and requests with target server.
  *
  * TODO: Implement class, Remove TODO comments and add JDoc.
  */
-public class ClientConnector {
+public class ClientConnector extends ContextWrapper {
 
     public enum ConnectionType { SOCKET, HTTP }
 
@@ -29,22 +33,21 @@ public class ClientConnector {
 
     private Handler handler;
 
-
-    public ClientConnector(String connectionName, String serverIP, String serverPort, ConnectionType type, String param, int polling){
+    public ClientConnector(Context context, String connectionName, String serverIP, String serverPort, ConnectionType type, String param, int polling){
+        super(context);
         this.connectionName = connectionName;
         this.serverIP = serverIP;
         this.serverPort = serverPort;
         this.type = type;
         this.param = param;
         this.polling = polling;
-
-        handler = new Handler();
     }
 
     // Creates a daemon thread that always runs as long as there's a connection to the server.
     // This thread polls/requests the queue number at a fixed interval (milliseconds).
     // E.g. Request queue number from this server every 2 seconds (2000 ms).
     public void startPolling(){
+        handler = new Handler();
         handler.postDelayed(new Runnable() {
             public void run(){
                 GetQueuesTask task = new GetQueuesTask();
@@ -56,7 +59,9 @@ public class ClientConnector {
     }
 
     public void stopPolling(){
-        handler.removeCallbacksAndMessages(null);
+        if (handler != null){
+            handler.removeCallbacksAndMessages(null);
+        }
     }
 
     // Requests the current number from a queue from this server.
@@ -65,6 +70,7 @@ public class ClientConnector {
     // This request uses AsyncTask for thread management.
     private class GetQueuesTask extends AsyncTask<Void, Void, Queue[]>{
 
+        @Override
         protected Queue[] doInBackground(Void... params) {
             Queue[] queues = null;
             switch(type){
@@ -90,9 +96,10 @@ public class ClientConnector {
             return queues;
         }
 
+        @Override
         protected void onPostExecute(Queue[] result) {
-            // Chamar aqui updateUI(result).
-            // super.onPostExecute(result);
+            MainScreen mScreen = (MainScreen) ClientConnector.this.getBaseContext();
+            mScreen.updateUIQueues(ClientConnector.this, result);
         }
     }
 

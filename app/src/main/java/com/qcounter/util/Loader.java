@@ -1,5 +1,7 @@
 package com.qcounter.util;
 
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.res.XmlResourceParser;
 import android.util.Xml;
 
@@ -13,14 +15,19 @@ import java.util.ArrayList;
 /**
  * Class that is responsible for loading ClientConnectors from either local or remote locations.
  */
-public class Loader {
+public class Loader extends ContextWrapper{
+
+    public Loader(Context context){
+        super(context);
+    }
 
     // Load ClientConnector list from local file to ArrayList.
     // Loads from res/values/connections.xml
-    public static ArrayList<ClientConnector> loadLocalXML(XmlResourceParser parser) throws XmlPullParserException, IOException {
+    public ArrayList<ClientConnector> loadLocalXML(XmlResourceParser parser) throws XmlPullParserException, IOException {
         ArrayList<ClientConnector> connectors = null;
         try{
-            parser.nextTag();
+            parser.next();
+            parser.next();
             connectors = parseXML(parser);
         } finally {
             parser.close();
@@ -31,13 +38,13 @@ public class Loader {
     // Parses XML and returns an ArrayList of ClientConnector.
     // Tags for each connection: name; ip; port; type; param; polling.
     // If a field is not present the value given is null. Only port and param can be null.
-    private static ArrayList<ClientConnector> parseXML(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private ArrayList<ClientConnector> parseXML(XmlPullParser parser) throws XmlPullParserException, IOException {
         ArrayList<ClientConnector> connectors = new ArrayList<>();
 
         parser.require(XmlPullParser.START_TAG, null, "resources");
         while(parser.next() != XmlPullParser.END_TAG) {
             String tagName = parser.getName();
-            if (parser.equals("connection")){
+            if (tagName.equals("connection")){
                 parser.require(XmlPullParser.START_TAG, null, "connection");
                 String name = null;
                 String ip = null;
@@ -79,17 +86,21 @@ public class Loader {
                         }
                     }
                     else if(secTagName.equals("param")){
-                        param = parser.getText();
-                        parser.nextTag();
+                        if(parser.next() == XmlPullParser.TEXT) {
+                            param = parser.getText();
+                            parser.nextTag();
+                        }
                     }
                     else if(secTagName.equals("polling")){
-                        polling = Integer.parseInt(parser.getText());
-                        parser.nextTag();
+                        if(parser.next() == XmlPullParser.TEXT) {
+                            polling = Integer.parseInt(parser.getText());
+                            parser.nextTag();
+                        }
                     }
                 }
 
                 if(polling != -1 && name != null && ip != null && type != null){
-                    ClientConnector connector = new ClientConnector(name, ip, port, type, param, polling);
+                    ClientConnector connector = new ClientConnector(this.getBaseContext(), name, ip, port, type, param, polling);
                     connectors.add(connector);
                 }
 
